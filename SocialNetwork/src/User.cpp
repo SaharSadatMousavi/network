@@ -1,0 +1,56 @@
+#include "User.h"
+#include <algorithm>
+using namespace std;
+
+User::User(const string &username, const string &password)
+    : username(username), password(password) {}
+
+string User::getUsername() const
+{
+    return username;
+}
+
+void User::setProfileInfo(const string &info)
+{
+    profileInfo = info;
+}
+
+string User::getProfileInfo() const
+{
+    return profileInfo;
+}
+
+void User::addPost(const string &post)
+{
+    posts.push_back(post);
+}
+
+void User::deletePost(int index)
+{
+    if (index >= 0 && index < posts.size())
+    {
+        posts.erase(posts.begin() + index);
+    }
+}
+
+void User::addFollower(User *follower)
+{
+    followers.push_back(follower);
+}
+
+void User::removeFollower(User *follower)
+{
+    followers.erase(
+        remove(followers.begin(), followers.end(), follower),
+        followers.end());
+}
+
+const vector<User *> &User::getFollowers() const
+{
+    return followers;
+}
+
+bool User::checkPassword(const string &password) const
+{
+    return this->password == password;
+}
