@@ -34,3 +34,16 @@ void Network::suggestFriends(User* user) {
         cout << "- " << suggestedUser->getUsername() << "\n";
     }
 }
+
+void Network::viewProfile(const User* currentUser, const User* profileUser) const {
+    if (profileUser->canViewProfile(currentUser)) {
+        cout << "Username: " << profileUser->getUsername() << "\n";
+        cout << "Profile Info: " << profileUser->getProfileInfo() << "\n";
+        cout << "Posts:\n";
+        for (const string& post : profileUser->getPosts()) {
+            cout << "- " << post << "\n";
+        }
+    } else {
+        cout << "Access denied! You are not allowed to view this profile.\n";
+    }
+}

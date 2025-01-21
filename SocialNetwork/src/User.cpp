@@ -1,17 +1,17 @@
 #include "User.h"
 #include <algorithm>
 #include <iostream>
-#include <sstream> 
+#include <sstream>
 #include <iomanip>
 using namespace std;
 
-string User::hashPassword(const string &password)const
+string User::hashPassword(const string &password) const
 {
-    
+
     unsigned long hash = 5381;
     for (char c : password)
     {
-        hash = ((hash << 5) + hash) + c; 
+        hash = ((hash << 5) + hash) + c;
     }
     stringstream ss;
     ss << hex << hash;
@@ -67,4 +67,13 @@ const vector<User *> &User::getFollowers() const
 bool User::checkPassword(const string &password) const
 {
     return passwordHash == hashPassword(password);
+}
+
+bool User::canViewProfile(const User *viewer) const
+{
+    return (viewer == this) || (find(followers.begin(), followers.end(), viewer) != followers.end());
+}
+
+const vector<string>& User::getPosts() const {
+    return posts;
 }

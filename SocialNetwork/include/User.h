@@ -26,6 +26,8 @@ public:
     void removeFollower(User* follower);
     const vector<User*>& getFollowers() const;
     bool checkPassword(const string& password) const; 
+    bool canViewProfile(const User* viewer) const;
+    const vector<string>& getPosts() const;
 };
 
 #endif

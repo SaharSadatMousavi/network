@@ -17,6 +17,9 @@ public:
     void registerUser(const string& username, const string& password);
     User* login(const string& username, const string& password);
     void suggestFriends(User* user);
+    void viewProfile(const User* currentUser, const User* profileUser) const;
+    bool deleteUser(const string& username);
+
 };
 
 #endif
