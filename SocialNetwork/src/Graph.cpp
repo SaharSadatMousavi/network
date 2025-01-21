@@ -20,10 +20,9 @@ const vector<User *> &Graph::getFollowers(User *user) const
 
 vector<User *> Graph::suggestFriends(User *user)
 {
-    vector<User *> suggestions;
+    vector<pair<double, User *>> suggestionsWithP; // تغییر: نام متغیر به suggestionsWithP
     const vector<User *> &followers = getFollowers(user);
 
-    // احتمال اشنایی
     for (const auto &pair : adjacencyList)
     {
         User *otherUser = pair.first;
@@ -33,7 +32,7 @@ vector<User *> Graph::suggestFriends(User *user)
         const vector<User *> &otherFollowers = getFollowers(otherUser);
         int commonFollowers = 0;
 
-        //  فالور مشترک
+        // تعداد دنبال‌کنندگان مشترک
         for (User *follower : followers)
         {
             if (find(otherFollowers.begin(), otherFollowers.end(), follower) != otherFollowers.end())
@@ -42,30 +41,43 @@ vector<User *> Graph::suggestFriends(User *user)
             }
         }
 
-        // اگر حداقل یک دنبال‌کننده مشترک وجودداشت،پیشنهادبده
-        if (commonFollowers > 0)
+        // محاسبه‌ی احتمال آشنایی
+        double probability = (double)commonFollowers / (followers.size() + otherFollowers.size() - commonFollowers);
+        if (probability > 0)
         {
-            suggestions.push_back(otherUser);
+            suggestionsWithP.push_back(make_pair(probability, otherUser)); // تغییر: استفاده از suggestionsWithP
         }
     }
 
     // اگر پیشنهادی نبود، کاربران جدید رو پیشنهاد بده
-    if (suggestions.empty())
+    if (suggestionsWithP.empty())
     {
         for (const auto &pair : adjacencyList)
         {
             if (pair.first != user)
             {
-                suggestions.push_back(pair.first);
-                if (suggestions.size() >= 6)
-                    break; // حداکثر6
+                suggestionsWithP.push_back(make_pair(0.0, pair.first)); // تغییر: استفاده از suggestionsWithP
+                if (suggestionsWithP.size() >= 6)
+                    break; // حداکثر 6 پیشنهاد
             }
         }
     }
 
+    // مرتب‌سازی پیشنهادها بر اساس احتمال آشنایی (از زیاد به کم)
+    sort(suggestionsWithP.begin(), suggestionsWithP.end(), [](const pair<double, User *> &a, const pair<double, User *> &b)
+         { return a.first > b.first; });
+
+    
+    vector<User *> suggestions;
+    for (const auto &pair : suggestionsWithP)
+    { 
+        suggestions.push_back(pair.second);
+        if (suggestions.size() >= 6)
+            break;
+    }
+
     return suggestions;
 }
-
 void Graph::removeUser(User *user)
 {
     adjacencyList.erase(user);
