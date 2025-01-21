@@ -3,16 +3,17 @@
 
 #include <string>
 #include <vector>
-
 using namespace std;
 
 class User {
 private:
     string username;
-    string password;
+    string passwordHash; 
     string profileInfo;
     vector<string> posts;
     vector<User*> followers;
+
+    string hashPassword(const string& password)const;
 
 public:
     User(const string& username, const string& password);
@@ -24,7 +25,7 @@ public:
     void addFollower(User* follower);
     void removeFollower(User* follower);
     const vector<User*>& getFollowers() const;
-    bool checkPassword(const string& password) const;
+    bool checkPassword(const string& password) const; 
 };
 
 #endif

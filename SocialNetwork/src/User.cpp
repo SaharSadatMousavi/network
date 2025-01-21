@@ -1,10 +1,24 @@
 #include "User.h"
 #include <algorithm>
-#include<iostream>
+#include <iostream>
+#include <sstream> 
+#include <iomanip>
 using namespace std;
 
+string User::hashPassword(const string &password)const
+{
+    
+    unsigned long hash = 5381;
+    for (char c : password)
+    {
+        hash = ((hash << 5) + hash) + c; 
+    }
+    stringstream ss;
+    ss << hex << hash;
+    return ss.str();
+}
 User::User(const string &username, const string &password)
-    : username(username), password(password) {}
+    : username(username), passwordHash(hashPassword(password)) {} // ذخیره هش پسورد
 
 string User::getUsername() const
 {
@@ -52,5 +66,5 @@ const vector<User *> &User::getFollowers() const
 
 bool User::checkPassword(const string &password) const
 {
-    return this->password == password;
+    return passwordHash == hashPassword(password);
 }
