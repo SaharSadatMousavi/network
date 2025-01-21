@@ -1,5 +1,5 @@
 #include "Network.h"
-#include<iostream>
+#include <iostream>
 using namespace std;
 
 void Network::registerUser(const string &username, const string &password)
@@ -27,23 +27,50 @@ User *Network::login(const string &username, const string &password)
     return nullptr;
 }
 
-void Network::suggestFriends(User* user) {
-    vector<User*> suggestions = socialGraph.suggestFriends(user);
+void Network::suggestFriends(User *user)
+{
+    vector<User *> suggestions = socialGraph.suggestFriends(user);
     cout << "Suggested friends for " << user->getUsername() << ":\n";
-    for (User* suggestedUser : suggestions) {
+    for (User *suggestedUser : suggestions)
+    {
         cout << "- " << suggestedUser->getUsername() << "\n";
     }
 }
 
-void Network::viewProfile(const User* currentUser, const User* profileUser) const {
-    if (profileUser->canViewProfile(currentUser)) {
+void Network::viewProfile(const User *currentUser, const User *profileUser) const
+{
+    if (profileUser->canViewProfile(currentUser))
+    {
         cout << "Username: " << profileUser->getUsername() << "\n";
         cout << "Profile Info: " << profileUser->getProfileInfo() << "\n";
         cout << "Posts:\n";
-        for (const string& post : profileUser->getPosts()) {
+        for (const string &post : profileUser->getPosts())
+        {
             cout << "- " << post << "\n";
         }
-    } else {
+    }
+    else
+    {
         cout << "Access denied! You are not allowed to view this profile.\n";
     }
+}
+
+bool Network::deleteUser(const string &username)
+{
+    auto it = usersTable.find(username);
+    if (it != usersTable.end())
+    {
+        User *user = it->second;
+
+        socialGraph.removeUser(user);
+
+        usersTable.erase(it);
+
+        delete user;
+
+        cout << "User " << username << " deleted successfully!\n";
+        return true;
+    }
+    cout << "User " << username << " not found!\n";
+    return false;
 }

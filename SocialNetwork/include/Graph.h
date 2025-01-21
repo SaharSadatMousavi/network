@@ -17,6 +17,8 @@ public:
     void addEdge(User *user1, User *user2);
     const vector<User *> &getFollowers(User *user) const;
     vector<User *> suggestFriends(User *user);
+    void removeUser(User* user);
+
 };
 
 #endif

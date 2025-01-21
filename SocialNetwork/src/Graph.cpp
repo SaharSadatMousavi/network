@@ -18,40 +18,61 @@ const vector<User *> &Graph::getFollowers(User *user) const
     return adjacencyList.at(user);
 }
 
-vector<User*> Graph::suggestFriends(User* user) {
-    vector<User*> suggestions;
-    const vector<User*>& followers = getFollowers(user);
+vector<User *> Graph::suggestFriends(User *user)
+{
+    vector<User *> suggestions;
+    const vector<User *> &followers = getFollowers(user);
 
-    //احتمال اشنایی
-    for (const auto& pair : adjacencyList) {
-        User* otherUser = pair.first;
-        if (otherUser == user) continue; 
+    // احتمال اشنایی
+    for (const auto &pair : adjacencyList)
+    {
+        User *otherUser = pair.first;
+        if (otherUser == user)
+            continue;
 
-        const vector<User*>& otherFollowers = getFollowers(otherUser);
+        const vector<User *> &otherFollowers = getFollowers(otherUser);
         int commonFollowers = 0;
 
         //  فالور مشترک
-        for (User* follower : followers) {
-            if (find(otherFollowers.begin(), otherFollowers.end(), follower) != otherFollowers.end()) {
+        for (User *follower : followers)
+        {
+            if (find(otherFollowers.begin(), otherFollowers.end(), follower) != otherFollowers.end())
+            {
                 commonFollowers++;
             }
         }
 
         // اگر حداقل یک دنبال‌کننده مشترک وجودداشت،پیشنهادبده
-        if (commonFollowers > 0) {
+        if (commonFollowers > 0)
+        {
             suggestions.push_back(otherUser);
         }
     }
 
     // اگر پیشنهادی نبود، کاربران جدید رو پیشنهاد بده
-    if (suggestions.empty()) {
-        for (const auto& pair : adjacencyList) {
-            if (pair.first != user) {
+    if (suggestions.empty())
+    {
+        for (const auto &pair : adjacencyList)
+        {
+            if (pair.first != user)
+            {
                 suggestions.push_back(pair.first);
-                if (suggestions.size() >= 6) break; //حداکثر6
+                if (suggestions.size() >= 6)
+                    break; // حداکثر6
             }
         }
     }
 
     return suggestions;
+}
+
+void Graph::removeUser(User *user)
+{
+    adjacencyList.erase(user);
+
+    for (auto &pair : adjacencyList)
+    {
+        auto &followers = pair.second;
+        followers.erase(remove(followers.begin(), followers.end(), user), followers.end());
+    }
 }
