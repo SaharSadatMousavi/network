@@ -1,6 +1,6 @@
 #include "User.h"
 #include <algorithm>
-
+#include<iostream>
 using namespace std;
 
 User::User(const string &username, const string &password)
@@ -14,6 +14,7 @@ string User::getUsername() const
 void User::setProfileInfo(const string &info)
 {
     profileInfo = info;
+    cout << "Profile updated successfully!\n";
 }
 
 string User::getProfileInfo() const
