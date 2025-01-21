@@ -1,5 +1,6 @@
 #include "User.h"
 #include <algorithm>
+
 using namespace std;
 
 User::User(const string &username, const string &password)
@@ -40,9 +41,7 @@ void User::addFollower(User *follower)
 
 void User::removeFollower(User *follower)
 {
-    followers.erase(
-        remove(followers.begin(), followers.end(), follower),
-        followers.end());
+    followers.erase(remove(followers.begin(), followers.end(), follower), followers.end());
 }
 
 const vector<User *> &User::getFollowers() const

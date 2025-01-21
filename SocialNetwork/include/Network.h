@@ -1,22 +1,22 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
+#include <unordered_map>
+#include <string>
 #include "User.h"
 #include "Graph.h"
-#include "HashTable.h"
 
 using namespace std;
 
-class Network
-{
+class Network {
 private:
-    HashTable<string, User *> usersTable;
+    unordered_map<string, User*> usersTable;
     Graph socialGraph;
 
 public:
-    void registerUser(const string &username, const string &password);
-    User *login(const string &username, const string &password);
-    void suggestFriends(User *user);
+    void registerUser(const string& username, const string& password);
+    User* login(const string& username, const string& password);
+    void suggestFriends(User* user);
 };
 
 #endif

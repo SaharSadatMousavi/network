@@ -20,8 +20,5 @@ const vector<User *> &Graph::getFollowers(User *user) const
 
 vector<User *> Graph::suggestFriends(User *user)
 {
-    /*...................
-    .....................*/
-   
-    return vector<User *>(); 
+    return vector<User *>();
 }
