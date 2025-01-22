@@ -1,6 +1,5 @@
 #include "Graph.h"
 #include <algorithm>
-using namespace std;
 
 void Graph::addUser(User *user)
 {
@@ -20,7 +19,7 @@ const vector<User *> &Graph::getFollowers(User *user) const
 
 vector<User *> Graph::suggestFriends(User *user)
 {
-    vector<pair<double, User *>> suggestionsWithP; // تغییر: نام متغیر به suggestionsWithP
+    vector<pair<double, User *>> suggestionsWithP;
     const vector<User *> &followers = getFollowers(user);
 
     for (const auto &pair : adjacencyList)
@@ -32,7 +31,6 @@ vector<User *> Graph::suggestFriends(User *user)
         const vector<User *> &otherFollowers = getFollowers(otherUser);
         int commonFollowers = 0;
 
-        // تعداد دنبال‌کنندگان مشترک
         for (User *follower : followers)
         {
             if (find(otherFollowers.begin(), otherFollowers.end(), follower) != otherFollowers.end())
@@ -41,36 +39,32 @@ vector<User *> Graph::suggestFriends(User *user)
             }
         }
 
-        // محاسبه‌ی احتمال آشنایی
         double probability = (double)commonFollowers / (followers.size() + otherFollowers.size() - commonFollowers);
         if (probability > 0)
         {
-            suggestionsWithP.push_back(make_pair(probability, otherUser)); // تغییر: استفاده از suggestionsWithP
+            suggestionsWithP.push_back(make_pair(probability, otherUser));
         }
     }
 
-    // اگر پیشنهادی نبود، کاربران جدید رو پیشنهاد بده
     if (suggestionsWithP.empty())
     {
         for (const auto &pair : adjacencyList)
         {
             if (pair.first != user)
             {
-                suggestionsWithP.push_back(make_pair(0.0, pair.first)); // تغییر: استفاده از suggestionsWithP
+                suggestionsWithP.push_back(make_pair(0.0, pair.first));
                 if (suggestionsWithP.size() >= 6)
-                    break; // حداکثر 6 پیشنهاد
+                    break;
             }
         }
     }
 
-    // مرتب‌سازی پیشنهادها بر اساس احتمال آشنایی (از زیاد به کم)
     sort(suggestionsWithP.begin(), suggestionsWithP.end(), [](const pair<double, User *> &a, const pair<double, User *> &b)
          { return a.first > b.first; });
 
-    
     vector<User *> suggestions;
     for (const auto &pair : suggestionsWithP)
-    { 
+    {
         suggestions.push_back(pair.second);
         if (suggestions.size() >= 6)
             break;

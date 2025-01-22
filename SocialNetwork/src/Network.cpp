@@ -1,6 +1,6 @@
 #include "Network.h"
+#include "Post.h"
 #include <iostream>
-using namespace std;
 
 void Network::registerUser(const string &username, const string &password)
 {
@@ -44,9 +44,13 @@ void Network::viewProfile(const User *currentUser, const User *profileUser) cons
         cout << "Username: " << profileUser->getUsername() << "\n";
         cout << "Profile Info: " << profileUser->getProfileInfo() << "\n";
         cout << "Posts:\n";
-        for (const string &post : profileUser->getPosts())
+        for (const Post *post : profileUser->getPosts())
         {
-            cout << "- " << post << "\n";
+            cout << "- " << post->content << " (Likes: " << post->likes.size() << ")\n";
+            for (const Comment &comment : post->comments)
+            {
+                cout << "  - " << comment.author->getUsername() << ": " << comment.text << "\n";
+            }
         }
     }
     else
@@ -54,7 +58,6 @@ void Network::viewProfile(const User *currentUser, const User *profileUser) cons
         cout << "Access denied! You are not allowed to view this profile.\n";
     }
 }
-
 bool Network::deleteUser(const string &username)
 {
     auto it = usersTable.find(username);
@@ -73,4 +76,38 @@ bool Network::deleteUser(const string &username)
     }
     cout << "User " << username << " not found!\n";
     return false;
+}
+
+void Network::likePost(User *user, int postIndex)
+{
+    if (postIndex >= 0 && postIndex < user->getPosts().size())
+    {
+        user->getPosts()[postIndex]->addLike(user);
+    }
+}
+
+void Network::unlikePost(User *user, int postIndex)
+{
+    if (postIndex >= 0 && postIndex < user->getPosts().size())
+    {
+        user->getPosts()[postIndex]->unlike(user);
+        cout << "Post unliked successfully!\n";
+    }
+    else
+    {
+        cout << "Invalid post index!\n";
+    }
+}
+
+void Network::addComment(User *user, int postIndex, const string &comment)
+{
+    if (postIndex >= 0 && postIndex < user->getPosts().size())
+    {
+        user->getPosts()[postIndex]->addComment(comment, user);
+        cout << "Comment added successfully!\n";
+    }
+    else
+    {
+        cout << "Invalid post index!\n";
+    }
 }

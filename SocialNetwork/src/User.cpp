@@ -1,9 +1,9 @@
 #include "User.h"
+#include "Post.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
 #include <iomanip>
-using namespace std;
 
 string User::hashPassword(const string &password) const
 {
@@ -36,9 +36,9 @@ string User::getProfileInfo() const
     return profileInfo;
 }
 
-void User::addPost(const string &post)
+void User::addPost(const string &content)
 {
-    posts.push_back(post);
+    posts.push_back(new Post(content, this));
 }
 
 void User::deletePost(int index)
@@ -49,9 +49,10 @@ void User::deletePost(int index)
     }
 }
 
-void User::addFollower(User *follower)
+void User::follow(User *userToFollow)
 {
-    followers.push_back(follower);
+    userToFollow->followers.push_back(this);
+    cout << this->getUsername() << " is now following " << userToFollow->getUsername() << ".\n";
 }
 
 void User::removeFollower(User *follower)
@@ -71,9 +72,21 @@ bool User::checkPassword(const string &password) const
 
 bool User::canViewProfile(const User *viewer) const
 {
-    return (viewer == this) || (find(followers.begin(), followers.end(), viewer) != followers.end());
+    if (viewer == this)
+    {
+        return true;
+    }
+    for (const User *follower : followers)
+    {
+        if (follower == viewer)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
-const vector<string>& User::getPosts() const {
+const vector<Post *> &User::getPosts() const
+{
     return posts;
 }
