@@ -1,6 +1,12 @@
 #include "Network.h"
 #include "Post.h"
+
 #include <iostream>
+
+void printColored(const string &text, int colorCode, bool bold );
+void showLoadingAnimation();
+void showSuccessMessage(const string &message);
+void showErrorMessage(const string &message);
 
 void Network::registerUser(const string &username, const string &password)
 {
@@ -109,5 +115,90 @@ void Network::addComment(User *user, int postIndex, const string &comment)
     else
     {
         cout << "Invalid post index!\n";
+    }
+}
+
+void Network::viewProfileWithInteraction(User *currentUser, User *profileUser) const
+{
+    if (profileUser->canViewProfile(currentUser))
+    {
+        while (true)
+        {
+            cout << "Username: " << profileUser->getUsername() << "\n";
+            cout << "Profile Info: " << profileUser->getProfileInfo() << "\n";
+            cout << "Posts:\n";
+            int postIndex = 0;
+            for (const Post *post : profileUser->getPosts())
+            {
+                cout << postIndex << ". " << post->content << " (Likes: " << post->getLikes().size() << ")\n";
+                for (const Comment &comment : post->comments)
+                {
+                    cout << "  - " << comment.author->getUsername() << ": " << comment.text << "\n";
+                }
+                postIndex++;
+            }
+
+            cout << "\nOptions:\n";
+            cout << "1. Like a post\n";
+            cout << "2. Add a comment\n";
+            cout << "3. Back to main menu\n";
+            cout << "Enter your choice: ";
+
+            int choice;
+            cin >> choice;
+            cin.ignore();
+
+            if (choice == 1)
+            { 
+                int postIndex;
+                cout << "Enter the post index to like: ";
+                cin >> postIndex;
+                cin.ignore(); 
+
+                if (postIndex >= 0 && postIndex < profileUser->getPosts().size())
+                {
+                    profileUser->getPosts()[postIndex]->addLike(currentUser);
+                    showLoadingAnimation();
+                    showSuccessMessage("Post liked successfully!");
+                }
+                else
+                {
+                    showErrorMessage("Invalid post index!");
+                }
+            }
+            else if (choice == 2)
+            { 
+                int postIndex;
+                cout << "Enter the post index to comment: ";
+                cin >> postIndex;
+                cin.ignore();
+
+                if (postIndex >= 0 && postIndex < profileUser->getPosts().size())
+                {
+                    string commentText;
+                    cout << "Enter your comment: ";
+                    getline(cin, commentText);
+                    profileUser->getPosts()[postIndex]->addComment(commentText, currentUser);
+                    showLoadingAnimation();
+                    showSuccessMessage("Comment added successfully!");
+                }
+                else
+                {
+                    showErrorMessage("Invalid post index!");
+                }
+            }
+            else if (choice == 3)
+            { 
+                break;
+            }
+            else
+            {
+                showErrorMessage("Invalid choice! Please try again.");
+            }
+        }
+    }
+    else
+    {
+        cout << "Access denied! You are not allowed to view this profile.\n";
     }
 }

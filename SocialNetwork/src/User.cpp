@@ -51,8 +51,16 @@ void User::deletePost(int index)
 
 void User::follow(User *userToFollow)
 {
-    userToFollow->followers.push_back(this);
-    cout << this->getUsername() << " is now following " << userToFollow->getUsername() << ".\n";
+    if (userToFollow != this)
+    {
+        userToFollow->followers.push_back(this);
+        this->following.push_back(userToFollow);
+        cout << this->getUsername() << " is now following " << userToFollow->getUsername() << ".\n";
+    }
+    else
+    {
+        cout << "You cannot follow yourself!\n";
+    }
 }
 
 void User::removeFollower(User *follower)
@@ -63,6 +71,11 @@ void User::removeFollower(User *follower)
 const vector<User *> &User::getFollowers() const
 {
     return followers;
+}
+
+const vector<User *> &User::getFollowing() const
+{
+    return following;
 }
 
 bool User::checkPassword(const string &password) const

@@ -3,6 +3,8 @@
 
 #include <unordered_map>
 #include <string>
+#include<algorithm>
+#include <iostream>
 #include "User.h"
 #include "Graph.h"
 #include "Post.h"
@@ -28,6 +30,7 @@ public:
     {
         return usersTable;
     }
+    void viewProfileWithInteraction(User *currentUser, User *profileUser) const;
 };
 
 #endif

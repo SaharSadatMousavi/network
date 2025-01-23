@@ -7,14 +7,25 @@
 
 using namespace std;
 
-void printColored(const string &text, int colorCode, bool bold );
+#include <algorithm>
+
+template <typename T>
+bool isElementExists(const vector<T> &arr, const T &element)
+{
+    return count(arr.begin(), arr.end(), element) > 0;
+}
+
+void printColored(const string &text, int colorCode, bool bold = false)
+{
+    cout << "\033[" << (bold ? "1;" : "0;") << colorCode << "m" << text << "\033[0m";
+}
 
 void showLoadingAnimation()
 {
     for (int i = 0; i < 3; i++)
     {
         system("cls");
-        printColored("🌀 Loading", 36, true); // آیکون چرخش (🌀)
+        printColored("🌀 Loading", 36, true);
         for (int j = 0; j <= i; j++)
         {
             cout << ".";
@@ -24,45 +35,76 @@ void showLoadingAnimation()
     }
 }
 
-void printColored(const string &text, int colorCode, bool bold = false)
-{
-    cout << "\033[" << (bold ? "1;" : "0;") << colorCode << "m" << text << "\033[0m";
-}
-
 void showSuccessMessage(const string &message)
 {
-    printColored("✅ " + message + "\n", 32, true); // سبز با آیکون ✅
+    printColored("✅ " + message + "\n", 32, true);
 }
 
 void showErrorMessage(const string &message)
 {
-    printColored("❌ " + message + "\n", 31, true); // قرمز با آیکون ❌
+    printColored("❌ " + message + "\n", 31, true);
 }
 
 void printMenu()
 {
     cout << "\033[1;36m";
-    cout <<     "  \033[1;33m🌟 Social Network Menu 🌟\033[1;36m       \n" << endl;
-    cout <<     " 1. 📝 \033[32mRegister\033[1;36m                  \n" << endl;
-    cout <<     " 2. 🔑 \033[32mLogin\033[1;36m                     \n" << endl;
-    cout <<     " 3. 👥 \033[32mSuggest Friends\033[1;36m           \n" << endl;
-    cout <<     " 4. 👤 \033[32mView Profile\033[1;36m              \n" << endl;
-    cout <<     " 5. 📝 \033[32mCreate a Post\033[1;36m             \n" << endl;
-    cout <<     " 6. ❤️ \033[32mLike a Post\033[1;36m               \n" << endl;
-    cout <<     " 7. 💔 \033[32mUnlike a Post\033[1;36m             \n" << endl;
-    cout <<     " 8. 💬 \033[32mAdd Comment\033[1;36m               \n" << endl;
-    cout <<     " 9. 🗑️ \033[32mDelete Account\033[1;36m            \n" << endl;
-    cout <<     " 10. 🚪 \033[31mExit\033[1;36m                     \n" << endl;
-    cout <<     "\033[0m";
-    cout <<     "Enter your choice: ";
+    cout << "  \033[1;33m🌟 Social Network Menu 🌟\033[1;36m       " << endl;
+    cout << " 1. 📝 \033[32mRegister\033[1;36m                  " << endl;
+    cout << " 2. 🔑 \033[32mLogin\033[1;36m                     " << endl;
+    cout << " 3. 👥 \033[32mSuggest Friends\033[1;36m           " << endl;
+    cout << " 4. 👤 \033[32mView Profile\033[1;36m              " << endl;
+    cout << " 5. 📝 \033[32mCreate a Post\033[1;36m             " << endl;
+    cout << " 6. 👤 \033[32mView Profile with Interaction\033[1;36m " << endl; // گزینه جدید
+    cout << " 7. 🗑️ \033[32mDelete Account\033[1;36m            " << endl;
+    cout << " 8. 🚪 \033[31mExit\033[1;36m                     " << endl;
+    cout << "\033[0m";
+    cout << "Enter your choice: ";
 }
 
 int main()
 {
     Network network;
+    cout << "Registering 10 users...\n";
+    network.registerUser("sahar", "1234");
+    network.registerUser("ali", "5678");
+    network.registerUser("reza", "91011");
+    network.registerUser("maryam", "121314");
+    cout << "Users registered successfully!\n\n";
+    network.registerUser("ahmad", "151617");
+    network.registerUser("fatemeh", "181920");
+    network.registerUser("hossein", "212223");
+    network.registerUser("zahra", "242526");
+    network.registerUser("mohammad", "272829");
+    network.registerUser("narges", "303132");
+    cout << "10 users registered successfully!\n\n";
+
+    User *sahar = network.login("sahar", "1234");
+    User *ali = network.login("ali", "5678");
+    User *reza = network.login("reza", "91011");
+    User *maryam = network.login("maryam", "121314");
+    User *ahmad = network.login("ahmad", "151617");
+    User *fatemeh = network.login("fatemeh", "181920");
+    User *hossein = network.login("hossein", "212223");
+    User *zahra = network.login("zahra", "242526");
+    User *mohammad = network.login("mohammad", "272829");
+    User *narges = network.login("narges", "303132");
+
+    cout << "Adding posts...\n";
+    sahar->addPost("Hello, this is Sahar's first post!");
+    ali->addPost("Hi, this is Ali's post!");
+    reza->addPost("Reza here, just joined the network!");
+    maryam->addPost("Maryam's post: Enjoying the network!");
+    ahmad->addPost("Ahmad's post: Learning C++!");
+    fatemeh->addPost("Fatemeh's post: Working on a project!");
+    hossein->addPost("Hossein's post: Hello everyone!");
+    zahra->addPost("Zahra's post: Nice to meet you all!");
+    mohammad->addPost("Mohammad's post: Let's code together!");
+    narges->addPost("Narges's post: Happy coding!");
+    cout << "Posts added successfully!\n\n";
+
     User *currentUser = nullptr;
     int choice;
-
+    vector<int> validC = {1, 2, 3, 4, 5, 6, 7, 8};
     while (true)
     {
         printMenu();
@@ -126,7 +168,6 @@ int main()
                 auto it = network.getUsersTable().find(username);
                 if (it != network.getUsersTable().end())
                 {
-                    showLoadingAnimation();
                     network.viewProfile(currentUser, it->second);
                 }
                 else
@@ -161,12 +202,18 @@ int main()
         {
             if (currentUser)
             {
-                int postIndex;
-                printColored("Enter post index to like: ", 36);
-                cin >> postIndex;
-                network.likePost(currentUser, postIndex);
-                showLoadingAnimation();
-                showSuccessMessage("Post liked successfully!");
+                string username;
+                printColored("Enter username to view profile: ", 36);
+                getline(cin, username);
+                auto it = network.getUsersTable().find(username);
+                if (it != network.getUsersTable().end())
+                {
+                    network.viewProfileWithInteraction(currentUser, it->second);
+                }
+                else
+                {
+                    showErrorMessage("User not found!");
+                }
             }
             else
             {
@@ -175,44 +222,6 @@ int main()
             break;
         }
         case 7:
-        {
-            if (currentUser)
-            {
-                int postIndex;
-                printColored("Enter post index to unlike: ", 36);
-                cin >> postIndex;
-                network.unlikePost(currentUser, postIndex);
-                showLoadingAnimation();
-                showSuccessMessage("Post unliked successfully!");
-            }
-            else
-            {
-                showErrorMessage("Please login first!");
-            }
-            break;
-        }
-        case 8:
-        {
-            if (currentUser)
-            {
-                int postIndex;
-                string comment;
-                printColored("Enter post index to comment: ", 36);
-                cin >> postIndex;
-                cin.ignore();
-                printColored("Enter your comment: ", 36);
-                getline(cin, comment);
-                network.addComment(currentUser, postIndex, comment);
-                showLoadingAnimation();
-                showSuccessMessage("Comment added successfully!");
-            }
-            else
-            {
-                showErrorMessage("Please login first!");
-            }
-            break;
-        }
-        case 9:
         {
             if (currentUser)
             {
@@ -228,7 +237,7 @@ int main()
             }
             break;
         }
-        case 10:
+        case 8:
         {
             showErrorMessage("Exiting...");
             return 0;
@@ -238,6 +247,10 @@ int main()
             showErrorMessage("Invalid choice! Please try again.");
             break;
         }
+        }
+        if (!(isElementExists(validC, choice)))
+        {
+            break;
         }
     }
 

@@ -13,6 +13,7 @@ private:
     string profileInfo;
     vector<Post *> posts;
     vector<User *> followers;
+    vector<User *> following;
 
     string hashPassword(const string &password) const;
 
@@ -21,11 +22,12 @@ public:
     string getUsername() const;
     void setProfileInfo(const string &info);
     string getProfileInfo() const;
-    void addPost(const string &content); 
+    void addPost(const string &content);
     void deletePost(int index);
-    void follow(User *userToFollow); 
+    void follow(User *userToFollow);
     void removeFollower(User *follower);
     const vector<User *> &getFollowers() const;
+    const vector<User *> &getFollowing() const;
     bool checkPassword(const string &password) const;
     bool canViewProfile(const User *viewer) const;
     const vector<Post *> &getPosts() const;

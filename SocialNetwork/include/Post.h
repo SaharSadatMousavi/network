@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+
 #include "User.h"
 
 using namespace std;
@@ -32,5 +33,6 @@ public:
     void addLike(User *user);
     void unlike(User *user);
     void addComment(const string &text, User *author);
+    const vector<User *> &getLikes() const;
 };
 #endif
