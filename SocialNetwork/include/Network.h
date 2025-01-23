@@ -24,6 +24,10 @@ public:
     void likePost(User *user, int postIndex);
     void unlikePost(User *user, int postIndex);
     void addComment(User *user, int postIndex, const string &comment);
+    unordered_map<std::string, User *> &getUsersTable()
+    {
+        return usersTable;
+    }
 };
 
 #endif
