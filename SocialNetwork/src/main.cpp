@@ -54,9 +54,10 @@ void printMenu()
     cout << " 3. 👥 \033[32mSuggest Friends\033[1;36m           " << endl;
     cout << " 4. 👤 \033[32mView Profile\033[1;36m              " << endl;
     cout << " 5. 📝 \033[32mCreate a Post\033[1;36m             " << endl;
-    cout << " 6. 👤 \033[32mView Profile with Interaction\033[1;36m " << endl; // گزینه جدید
+    cout << " 6. 👤 \033[32mView Profile with Interaction\033[1;36m " << endl;
     cout << " 7. 🗑️ \033[32mDelete Account\033[1;36m            " << endl;
-    cout << " 8. 🚪 \033[31mExit\033[1;36m                     " << endl;
+    cout << " 8. 👤 \033[32mFollow User\033[1;36m               " << endl;
+    cout << " 9. 🚪 \033[31mExit\033[1;36m                     " << endl;
     cout << "\033[0m";
     cout << "Enter your choice: ";
 }
@@ -237,7 +238,32 @@ int main()
             }
             break;
         }
-        case 8:
+        case 8: 
+        {
+            if (currentUser)
+            {
+                string username;
+                printColored("Enter username to follow: ", 36);
+                getline(cin, username);
+                auto it = network.getUsersTable().find(username);
+                if (it != network.getUsersTable().end())
+                {
+                    currentUser->follow(it->second);
+                    showLoadingAnimation();
+                    showSuccessMessage("You are now following " + username + "!");
+                }
+                else
+                {
+                    showErrorMessage("User not found!");
+                }
+            }
+            else
+            {
+                showErrorMessage("Please login first!");
+            }
+            break;
+        }
+        case 9:
         {
             showErrorMessage("Exiting...");
             return 0;

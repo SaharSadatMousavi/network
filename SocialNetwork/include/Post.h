@@ -7,7 +7,7 @@
 #include "User.h"
 
 using namespace std;
-// وای خدا خودت کمکم کن
+
 
 class User;
 class Comment
