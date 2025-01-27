@@ -18,7 +18,8 @@ string User::hashPassword(const string &password) const
     return ss.str();
 }
 User::User(const string &username, const string &password)
-    : username(username), passwordHash(hashPassword(password)) {} // ذخیره هش پسورد
+    : username(username), passwordHash(hashPassword(password)),
+      registrationTime(std::chrono::system_clock::now()) {} // ذخیره هش پسورد
 
 string User::getUsername() const
 {
@@ -102,4 +103,9 @@ bool User::canViewProfile(const User *viewer) const
 const vector<Post *> &User::getPosts() const
 {
     return posts;
+}
+
+std::chrono::system_clock::time_point User::getRegistrationTime() const
+{
+    return registrationTime;
 }

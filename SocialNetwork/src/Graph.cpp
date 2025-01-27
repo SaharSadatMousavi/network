@@ -48,14 +48,26 @@ vector<User *> Graph::suggestFriends(User *user)
 
     if (suggestionsWithP.empty())
     {
+                          // ایجاد لیستی از کاربران به جز خود کاربر
+        vector<User *> allUsers;
         for (const auto &pair : adjacencyList)
         {
             if (pair.first != user)
             {
-                suggestionsWithP.push_back(make_pair(0.0, pair.first));
-                if (suggestionsWithP.size() >= 6)
-                    break;
+                allUsers.push_back(pair.first);
             }
+        }
+
+                      // مرتبسازی کاربران براساس زمان ثبتنام 
+        sort(allUsers.begin(), allUsers.end(), [](User *a, User *b)
+             { return a->getRegistrationTime() > b->getRegistrationTime(); });
+
+                      // انتخاب ۶ کاربر جدید
+        for (User *newUser : allUsers)
+        {
+            suggestionsWithP.push_back(make_pair(0.0, newUser));
+            if (suggestionsWithP.size() >= 6)
+                break;
         }
     }
 
@@ -72,6 +84,7 @@ vector<User *> Graph::suggestFriends(User *user)
 
     return suggestions;
 }
+
 void Graph::removeUser(User *user)
 {
     adjacencyList.erase(user);

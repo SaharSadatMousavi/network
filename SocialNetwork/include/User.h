@@ -3,6 +3,7 @@
 #include "Post.h"
 #include <string>
 #include <vector>
+#include <chrono> 
 using namespace std;
 class Post;
 class User
@@ -14,6 +15,7 @@ private:
     vector<Post *> posts;
     vector<User *> followers;
     vector<User *> following;
+    chrono::system_clock::time_point registrationTime; 
 
     string hashPassword(const string &password) const;
 
@@ -31,6 +33,7 @@ public:
     bool checkPassword(const string &password) const;
     bool canViewProfile(const User *viewer) const;
     const vector<Post *> &getPosts() const;
+    chrono::system_clock::time_point getRegistrationTime() const;
 };
 
 #endif

@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-void printColored(const string &text, int colorCode, bool bold );
+void printColored(const string &text, int colorCode, bool bold);
 void showLoadingAnimation();
 void showSuccessMessage(const string &message);
 void showErrorMessage(const string &message);
@@ -139,21 +139,22 @@ void Network::viewProfileWithInteraction(User *currentUser, User *profileUser) c
             }
 
             cout << "\nOptions:\n";
-            cout << "1. Like a post\n";
-            cout << "2. Add a comment\n";
-            cout << "3. Back to main menu\n";
+            cout << "1. ❤️ Like a post\n";
+            cout << "2. 💬 Add a comment\n";
+            cout << "3. 💔 Unlike a post\n"; 
+            cout << "4. Back to main menu\n";
             cout << "Enter your choice: ";
 
             int choice;
             cin >> choice;
             cin.ignore();
 
-            if (choice == 1)
-            { 
+            if (choice == 1) 
+            {
                 int postIndex;
                 cout << "Enter the post index to like: ";
                 cin >> postIndex;
-                cin.ignore(); 
+                cin.ignore();
 
                 if (postIndex >= 0 && postIndex < profileUser->getPosts().size())
                 {
@@ -166,8 +167,8 @@ void Network::viewProfileWithInteraction(User *currentUser, User *profileUser) c
                     showErrorMessage("Invalid post index!");
                 }
             }
-            else if (choice == 2)
-            { 
+            else if (choice == 2) 
+            {
                 int postIndex;
                 cout << "Enter the post index to comment: ";
                 cin >> postIndex;
@@ -188,7 +189,25 @@ void Network::viewProfileWithInteraction(User *currentUser, User *profileUser) c
                 }
             }
             else if (choice == 3)
-            { 
+            {
+                int postIndex;
+                cout << "Enter the post index to unlike: ";
+                cin >> postIndex;
+                cin.ignore();
+
+                if (postIndex >= 0 && postIndex < profileUser->getPosts().size())
+                {
+                    profileUser->getPosts()[postIndex]->unlike(currentUser);
+                    showLoadingAnimation();
+                    showSuccessMessage("Post unliked successfully!");
+                }
+                else
+                {
+                    showErrorMessage("Invalid post index!");
+                }
+            }
+            else if (choice == 4) 
+            {
                 break;
             }
             else
